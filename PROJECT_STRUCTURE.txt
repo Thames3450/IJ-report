@@ -1,0 +1,35 @@
+IJ-Machine-Condition-PM-React-V6/
+├─ index.html
+├─ package.json
+├─ vite.config.js
+├─ .env
+├─ .env.example
+├─ RUN_DEV.bat
+├─ BUILD.bat
+├─ README_TH.md
+├─ PROJECT_STRUCTURE.txt
+├─ public/
+│  └─ icons/                  Streamline icons
+├─ supabase/
+│  ├─ schema.sql              Database + RLS + V6 evidence fields
+│  └─ asset_master.csv        68 IJ assets
+└─ src/
+   ├─ main.jsx
+   ├─ App.jsx
+   ├─ styles.css              Sarabun + responsive V6 UI
+   ├─ data/
+   │  └─ constants.js
+   ├─ lib/
+   │  └─ supabase.js
+   └─ components/
+      ├─ AuthModal.jsx
+      ├─ CompleteDefectModal.jsx
+      ├─ Dashboard.jsx
+      ├─ DefectModal.jsx
+      ├─ Defects.jsx
+      ├─ Inspection.jsx
+      ├─ MachineModal.jsx
+      ├─ Machines.jsx
+      ├─ Opportunity.jsx
+      ├─ Reports.jsx
+      └─ UI.jsx

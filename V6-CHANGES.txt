@@ -1,0 +1,24 @@
+IJ Maintenance React V6 — Workflow changes
+
+1) Inspection now has only 2 decisions:
+   - Normal / ปกติ → no photo, no extra text
+   - Found Defect / พบปัญหา → opens defect detail
+
+2) Found Defect requires:
+   - Problem / อาการ
+   - Location / ตำแหน่ง
+   - Before Photo / รูปก่อนแก้ (required)
+   Defaults are provided for Priority, Stop time, Repair time and Parts status.
+
+3) Saving Inspection automatically creates Defect Backlog records for every Found Defect.
+
+4) Completing a defect now requires:
+   - Corrective Action
+   - Result
+   - After Photo (required)
+   - Completed by (optional)
+
+5) Defect cards show Before / After evidence.
+6) Reports include completed work evidence and CSV columns for Before/After/Action/Result.
+7) Supabase live database upgraded with V6 evidence columns.
+8) Sarabun remains applied globally to body, controls, tables, modals and reports.
