@@ -66,3 +66,8 @@ npm run build
 - Zone A1 / A2 / A3 / A4 / Utility
 
 Checklist จะเปลี่ยนตามประเภท Asset และเครื่อง Injection ที่ไม่มี Robot จะไม่แสดงหมวด Robot
+
+---
+
+## GitHub Pages
+เวอร์ชันนี้เตรียม `.github/workflows/deploy-pages.yml` และ `public/.nojekyll` แล้ว สามารถ Deploy ผ่าน GitHub Actions ได้โดยตรง ดูขั้นตอนละเอียดที่ `GITHUB_PAGES_TH.md`
