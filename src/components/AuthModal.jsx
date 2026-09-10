@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Icon, Th } from './UI.jsx'
+import { Th } from './UI.jsx'
 
 export default function AuthModal({ open, onSignIn, onSignUp, onLocal, busy }) {
   const [email, setEmail] = useState('')
@@ -25,7 +25,7 @@ export default function AuthModal({ open, onSignIn, onSignUp, onLocal, busy }) {
   return (
     <div className="auth-gate show">
       <div className="auth-card">
-        <div className="auth-logo"><Icon name="Database-Check--Streamline-Ultimate.png" /></div>
+        <div className="auth-logo app-auth-logo"><img className="app-brand-icon" src={`${import.meta.env.BASE_URL}app-icon-192.png`} alt="IJ Maintenance" /></div>
         <h2>Connect to IJ Maintenance</h2>
         <p>เข้าสู่ระบบเพื่อบันทึกข้อมูลส่วนกลางบน Supabase และให้ทีมเห็นข้อมูลชุดเดียวกันทุกอุปกรณ์</p>
         <div className="field">

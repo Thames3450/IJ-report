@@ -351,14 +351,14 @@ export default function App() {
   return (
     <div className="app-shell">
       <aside className="sidebar no-print">
-        <div className="brand-block"><div className="brand-logo"><Icon name="Wrench-Head-Diagonal--Streamline-Core.png" /></div><div><b>IJ Maintenance</b><Th>Machine Condition & PM</Th></div></div>
+        <div className="brand-block"><div className="brand-logo"><img className="app-brand-icon" src={`${import.meta.env.BASE_URL}app-icon-192.png`} alt="IJ Maintenance" /></div><div><b>IJ Maintenance</b><Th>Machine Condition & PM</Th></div></div>
         <nav className="side-nav">{NAV_ITEMS.map(([id,en,th,icon]) => <button key={id} className={page === id ? 'active' : ''} onClick={() => go(id)}><Icon name={icon} /><span>{en}<Th>{th}</Th></span></button>)}</nav>
         <div className="sidebar-foot"><div className={`sync-chip ${syncTone}`}><span className="sync-dot" /><span>{syncText}</span></div><small>React V6 · Sarabun · Evidence Flow</small></div>
       </aside>
 
       <div className="app-main">
         <header className="topbar no-print">
-          <div className="mobile-brand"><div className="brand-logo small"><Icon name="Wrench-Head-Diagonal--Streamline-Core.png" /></div><div><b>IJ Maintenance</b><Th>Machine Condition & PM</Th></div></div>
+          <div className="mobile-brand"><div className="brand-logo small"><img className="app-brand-icon" src={`${import.meta.env.BASE_URL}app-icon-192.png`} alt="IJ Maintenance" /></div><div><b>IJ Maintenance</b><Th>Machine Condition & PM</Th></div></div>
           <div className="top-actions"><div className={`sync-chip desktop-sync ${syncTone}`}><span className="sync-dot" />{syncText}</div><button className="icon-btn" onClick={() => cloudMode ? loadCloudData() : null} title="Sync"><Icon name="Synchronize-Arrow-1--Streamline-Ultimate.png" /></button><button className="icon-btn auth-btn" onClick={() => user ? signOut() : setAuthOpen(true)}><Icon name={user ? 'Logout--Streamline-Ultimate.png' : 'Login-1--Streamline-Ultimate.png'} /><span>{user ? 'Sign out' : 'Sign in'}<Th>{user ? user.email : 'เข้าสู่ระบบ'}</Th></span></button></div>
         </header>
         {banner && <div className="db-banner no-print">{banner}</div>}

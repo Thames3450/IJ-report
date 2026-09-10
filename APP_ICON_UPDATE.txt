@@ -1,0 +1,13 @@
+IJ Maintenance V6.1 - App Icon Update
+
+Changed to the approved IJ gear + wrench icon.
+Applied to:
+- Sidebar logo
+- Mobile header logo
+- Login page logo
+- Browser favicon
+- Apple Touch Icon
+- PWA 192x192 / 512x512 icons
+- manifest.webmanifest
+
+Source image kept at public/app-icon-source.png

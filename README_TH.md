@@ -71,3 +71,11 @@ Checklist จะเปลี่ยนตามประเภท Asset และ
 
 ## GitHub Pages
 เวอร์ชันนี้เตรียม `.github/workflows/deploy-pages.yml` และ `public/.nojekyll` แล้ว สามารถ Deploy ผ่าน GitHub Actions ได้โดยตรง ดูขั้นตอนละเอียดที่ `GITHUB_PAGES_TH.md`
+
+## V6.1 - App Icon
+- ใช้ไอคอน IJ Maintenance รูปเฟือง + ประแจ + ตัวอักษร IJ ตามภาพที่เลือก
+- Browser favicon: `public/favicon.ico`
+- Android/PWA: `public/app-icon-192.png`, `public/app-icon-512.png`
+- iPhone/iPad Home Screen: `public/apple-touch-icon.png`
+- PWA manifest: `public/manifest.webmanifest`
+- โลโก้ Sidebar / Mobile Header / Login เปลี่ยนเป็นไอคอนเดียวกัน
