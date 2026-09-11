@@ -13,8 +13,8 @@ function defaultDefect(item) {
     repair: 20,
     parts: 'NOT_READY',
     action: '',
-    beforeFile: null,
-    beforePreview: '',
+    beforeFiles: [],
+    beforePreviews: [],
   }
 }
 
@@ -62,10 +62,25 @@ export default function Inspection({ machines, onSave, busy, preferredMachine })
     return { ...p, [keyOf(item)]: { ...defaultDefect(item), ...old, status: 'DEFECT' } }
   })
 
-  const pickPhoto = (item, file) => {
-    const current = draft[keyOf(item)]
-    if (current?.beforePreview?.startsWith('blob:')) URL.revokeObjectURL(current.beforePreview)
-    setItem(item, { beforeFile: file || null, beforePreview: file ? URL.createObjectURL(file) : '' })
+  const addPhotos = (item, fileList) => {
+    const selectedFiles = Array.from(fileList || []).filter((f) => f.type.startsWith('image/'))
+    if (!selectedFiles.length) return
+    const current = draft[keyOf(item)] || {}
+    setItem(item, {
+      beforeFiles: [...(current.beforeFiles || []), ...selectedFiles],
+      beforePreviews: [...(current.beforePreviews || []), ...selectedFiles.map((f) => URL.createObjectURL(f))],
+    })
+  }
+
+  const removePhoto = (item, index) => {
+    const current = draft[keyOf(item)] || {}
+    const previews = [...(current.beforePreviews || [])]
+    const files = [...(current.beforeFiles || [])]
+    const url = previews[index]
+    if (url?.startsWith('blob:')) URL.revokeObjectURL(url)
+    previews.splice(index, 1)
+    files.splice(index, 1)
+    setItem(item, { beforeFiles: files, beforePreviews: previews })
   }
 
   const submit = async () => {
@@ -77,7 +92,7 @@ export default function Inspection({ machines, onSave, busy, preferredMachine })
       const item = key.split('|')[2]
       if (!v.problem?.trim()) return alert(`กรุณาระบุอาการที่พบ\n${item}`)
       if (!v.location?.trim()) return alert(`กรุณาระบุตำแหน่งที่พบ\n${item}`)
-      if (!v.beforeFile) return alert(`กรุณาแนบรูปก่อนแก้อย่างน้อย 1 รูป\n${item}`)
+      if (!v.beforeFiles?.length) return alert(`กรุณาแนบรูปจุดปัญหาอย่างน้อย 1 รูป\n${item}`)
     }
 
     await onSave({ machine, inspector: inspector.trim() || 'Unknown', entries })
@@ -94,7 +109,7 @@ export default function Inspection({ machines, onSave, busy, preferredMachine })
     <div className="inspection-guide card compact">
       <div className="guide-step ok"><span>1</span><div><b>Normal / ปกติ</b><small>กดแล้วจบข้อนั้น ไม่ต้องถ่ายรูป ไม่ต้องพิมพ์</small></div></div>
       <div className="guide-arrow">→</div>
-      <div className="guide-step warn"><span>2</span><div><b>Found Defect / พบปัญหา</b><small>ระบุตำแหน่ง + อาการ + รูปก่อนแก้ ระบบสร้าง Defect ให้อัตโนมัติ</small></div></div>
+      <div className="guide-step warn"><span>2</span><div><b>Found Defect / พบปัญหา</b><small>ระบุตำแหน่ง + อาการ + แนบรูปหลายมุมได้ ระบบสร้าง Defect ให้อัตโนมัติ</small></div></div>
       <div className="guide-arrow">→</div>
       <div className="guide-step info"><span>3</span><div><b>Complete / ปิดงาน</b><small>ตอนซ่อมเสร็จต้องมี Action + Result + รูปหลังแก้</small></div></div>
     </div>
@@ -134,7 +149,17 @@ export default function Inspection({ machines, onSave, busy, preferredMachine })
                 <div className="field"><label>Spare Parts <Th>อะไหล่</Th></label><select value={v.parts || 'NOT_READY'} onChange={(e) => setItem(item, { parts: e.target.value })}><option value="READY">Ready / พร้อม</option><option value="NOT_READY">Not Ready / ยังไม่พร้อม</option><option value="NONE">Not Required / ไม่ใช้</option></select></div>
                 <div className="field"><label>Required Stop <Th>เวลาหยุดเครื่อง (นาที)</Th></label><input type="number" min="0" value={v.stop ?? 20} onChange={(e) => setItem(item, { stop: Number(e.target.value || 0) })} /></div>
                 <div className="field"><label>Repair Time <Th>เวลาซ่อมโดยประมาณ (นาที)</Th></label><input type="number" min="0" value={v.repair ?? 20} onChange={(e) => setItem(item, { repair: Number(e.target.value || 0) })} /></div>
-                <div className="field span-2"><label>Before Photo * <Th>รูปก่อนแก้ — ให้เห็นชิ้นส่วนและตำแหน่งที่มีปัญหา</Th></label><input type="file" accept="image/*" capture="environment" onChange={(e) => pickPhoto(item, e.target.files?.[0] || null)} />{v.beforePreview && <div className="photo-evidence-preview"><img src={v.beforePreview} alt="Before defect" /><div><b>Before / ก่อนแก้</b><small>ไม่ต้องถ่ายให้เห็นลมรั่วเอง ขอให้เห็นจุด/ชิ้นส่วนที่รั่วชัดเจน</small></div></div>}</div>
+                <div className="field span-2">
+                  <div className="label-row"><label>Problem Photos * <Th>รูปจุดปัญหา — แนบได้หลายรูป</Th></label><Pill tone="danger">อย่างน้อย 1 รูป</Pill></div>
+                  <div className="multi-photo-actions">
+                    <label className="photo-action-btn camera"><span>📷 Camera / ถ่ายรูป</span><small>ถ่ายหน้างานทีละรูป</small><input type="file" accept="image/*" capture="environment" onChange={(e) => { addPhotos(item, e.target.files); e.target.value = '' }} /></label>
+                    <label className="photo-action-btn gallery"><span>▦ Gallery / เลือกหลายรูป</span><small>เลือกหลายรูปพร้อมกัน</small><input type="file" accept="image/*" multiple onChange={(e) => { addPhotos(item, e.target.files); e.target.value = '' }} /></label>
+                  </div>
+                  {v.beforePreviews?.length ? <>
+                    <div className="multi-photo-summary"><b>{v.beforePreviews.length} photos / {v.beforePreviews.length} รูป</b><small>รูปแรกใช้เป็นภาพหลักในรายการปัญหา</small></div>
+                    <div className="multi-photo-grid">{v.beforePreviews.map((src, index) => <div className="multi-photo-card" key={`${src}-${index}`}><img src={src} alt={`Problem ${index + 1}`} /><span className="photo-number">{index + 1}</span><button type="button" className="photo-remove" onClick={() => removePhoto(item, index)}>×</button></div>)}</div>
+                  </> : <div className="photo-empty-note">แนะนำ: รูปแรกถ่ายภาพรวมตำแหน่ง · รูปถัดไปถ่ายใกล้จุดรั่ว/แตก/หลวม · ถ้ามีหลายจุดให้เพิ่มรูปได้</div>}
+                </div>
                 <div className="field span-2"><label>Recommended Action <Th>แนวทางแก้ไข / หมายเหตุ</Th></label><textarea value={v.action || ''} onChange={(e) => setItem(item, { action: e.target.value })} placeholder="เช่น เตรียมสายลม Ø8 และ fitting เพื่อเปลี่ยนตอนเครื่องหยุด" /></div>
               </div>
             </div>}

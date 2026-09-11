@@ -41,6 +41,7 @@ create table if not exists public.defects (
   status text not null default 'OPEN' check (status in ('OPEN','DONE')),
   photo_url text, -- legacy before photo field
   before_photo_url text,
+  before_photo_urls jsonb not null default '[]'::jsonb,
   after_photo_url text,
   resolution_action text,
   resolution_result text,
@@ -171,6 +172,15 @@ on conflict (machine_code) do update set
   active = true,
   updated_at = now();
 
+
+
+-- V6.2 multiple problem photos
+alter table public.defects add column if not exists before_photo_urls jsonb not null default '[]'::jsonb;
+update public.defects
+set before_photo_urls = jsonb_build_array(coalesce(before_photo_url, photo_url))
+where jsonb_array_length(before_photo_urls)=0 and coalesce(before_photo_url, photo_url) is not null;
+alter table public.defects drop constraint if exists defects_before_photo_urls_array;
+alter table public.defects add constraint defects_before_photo_urls_array check (jsonb_typeof(before_photo_urls) = 'array');
 
 -- Storage bucket 'defect-photos' is configured in the live project.
 -- Public read + authenticated insert/update/delete.

@@ -17,7 +17,7 @@ export default function Defects({ machines, defects, onAdd, onComplete, onReopen
 
   return <>
     <PageTitle title="Defect Backlog" th="รายการปัญหาและงานค้าง" right={<button className="btn primary" onClick={onAdd}><Icon name="Add-Circle--Streamline-Core.png" />Add Defect <Th className="light">เพิ่มปัญหา</Th></button>} />
-    <div className="evidence-rule card compact"><div><b>Evidence rule / กติกาหลักฐาน</b><small>เปิด Defect ต้องมีรูปก่อนแก้ · ปิดงานต้องมีรูปหลังแก้ + Action + Result</small></div><div className="evidence-rule-tags"><Pill tone="warn">Before required</Pill><Pill tone="ok">After required</Pill></div></div>
+    <div className="evidence-rule card compact"><div><b>Evidence rule / กติกาหลักฐาน</b><small>เปิด Defect ต้องมีรูปจุดปัญหาอย่างน้อย 1 รูป และแนบหลายรูปได้ · ปิดงานต้องมีรูปหลังแก้ + Action + Result</small></div><div className="evidence-rule-tags"><Pill tone="warn">Problem photos · Multi</Pill><Pill tone="ok">After required</Pill></div></div>
     <div className="toolbar card compact"><div className="field grow"><label>Search / ค้นหา</label><input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Asset, problem, location..." /></div><div className="field"><label>Status / สถานะ</label><select value={status} onChange={(e) => setStatus(e.target.value)}><option value="OPEN">Open / งานค้าง</option><option value="DONE">Completed / เสร็จแล้ว</option><option value="ALL">All / ทั้งหมด</option></select></div><div className="field"><label>Priority</label><select value={priority} onChange={(e) => setPriority(e.target.value)}><option value="ALL">All</option><option>A</option><option>B</option><option>C</option></select></div></div>
     <div className="defect-list">{filtered.length ? filtered.map((d) => {
       const asset = machineMap[d.machine]
@@ -25,14 +25,14 @@ export default function Defects({ machines, defects, onAdd, onComplete, onReopen
         <div className="defect-main">
           <div className="defect-title-row"><div><div className="eyebrow">{d.id} · {asset?.label || d.machine}</div><h3>{d.problem}</h3><p>{d.component || 'General'} · {d.location || '-'}</p></div>{priorityPill(d.priority)}</div>
 
-          <div className={`evidence-photos ${d.afterPhoto ? 'two' : 'one'}`}>
-            <div className="evidence-photo-card before">
-              <span>Before / ก่อนแก้</span>
-              {d.beforePhoto ? <img src={d.beforePhoto} alt={`Before ${d.problem}`} /> : <div className="missing-photo">No photo / ไม่มีรูป</div>}
+          <div className="defect-evidence-wrap">
+            <div className="evidence-photo-card before multi-before">
+              <div className="evidence-card-title"><span>Problem Photos / รูปจุดปัญหา</span><Pill tone="info">{(d.beforePhotos?.length || (d.beforePhoto ? 1 : 0))} รูป</Pill></div>
+              {(d.beforePhotos?.length || d.beforePhoto) ? <div className="defect-photo-gallery">{(d.beforePhotos?.length ? d.beforePhotos : [d.beforePhoto]).map((src, index) => <a href={src} target="_blank" rel="noreferrer" className="defect-gallery-item" key={`${src}-${index}`}><img src={src} alt={`Problem ${index + 1} - ${d.problem}`} /><span>{index + 1}</span></a>)}</div> : <div className="missing-photo">No photo / ไม่มีรูป</div>}
             </div>
-            {d.status === 'DONE' && <div className="evidence-photo-card after">
+            {d.status === 'DONE' && <div className="evidence-photo-card after single-after">
               <span>After / หลังแก้</span>
-              {d.afterPhoto ? <img src={d.afterPhoto} alt={`After ${d.problem}`} /> : <div className="missing-photo">No photo / ไม่มีรูป</div>}
+              {d.afterPhoto ? <a href={d.afterPhoto} target="_blank" rel="noreferrer"><img src={d.afterPhoto} alt={`After ${d.problem}`} /></a> : <div className="missing-photo">No photo / ไม่มีรูป</div>}
             </div>}
           </div>
 

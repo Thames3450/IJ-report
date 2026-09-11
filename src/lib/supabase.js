@@ -20,7 +20,8 @@ export function dbDefectToUi(d) {
     status: d.status || 'OPEN',
     created: d.created_at,
     completed: d.completed_at || null,
-    beforePhoto: d.before_photo_url || d.photo_url || '',
+    beforePhotos: Array.isArray(d.before_photo_urls) && d.before_photo_urls.length ? d.before_photo_urls : (d.before_photo_url || d.photo_url ? [d.before_photo_url || d.photo_url] : []),
+    beforePhoto: (Array.isArray(d.before_photo_urls) && d.before_photo_urls.length ? d.before_photo_urls[0] : (d.before_photo_url || d.photo_url || '')),
     afterPhoto: d.after_photo_url || '',
     resolutionAction: d.resolution_action || '',
     resolutionResult: d.resolution_result || '',
@@ -41,8 +42,9 @@ export function uiDefectToDb(d) {
     parts_status: d.parts || 'NONE',
     recommended_action: d.action || '',
     status: d.status || 'OPEN',
-    photo_url: d.beforePhoto || null,
-    before_photo_url: d.beforePhoto || null,
+    photo_url: d.beforePhotos?.[0] || d.beforePhoto || null,
+    before_photo_url: d.beforePhotos?.[0] || d.beforePhoto || null,
+    before_photo_urls: d.beforePhotos?.length ? d.beforePhotos : (d.beforePhoto ? [d.beforePhoto] : []),
     after_photo_url: d.afterPhoto || null,
     resolution_action: d.resolutionAction || null,
     resolution_result: d.resolutionResult || null,
@@ -57,7 +59,8 @@ export async function uploadDefectPhoto(file, defectId, kind = 'before') {
   if (!supabase || !file) return ''
   const ext = (file.name.split('.').pop() || 'jpg').toLowerCase()
   const safeKind = kind === 'after' ? 'after' : 'before'
-  const path = `${new Date().getFullYear()}/${defectId}/${safeKind}-${Date.now()}.${ext}`
+  const unique = `${Date.now()}-${Math.random().toString(36).slice(2,8)}`
+  const path = `${new Date().getFullYear()}/${defectId}/${safeKind}-${unique}.${ext}`
   const { error } = await supabase.storage.from('defect-photos').upload(path, file, {
     upsert: false,
     cacheControl: '3600',

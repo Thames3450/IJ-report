@@ -1,0 +1,17 @@
+IJ Maintenance React V6.2 - Multiple Problem Photos
+===================================================
+
+อัปเดตตามการใช้งานหน้างาน IJ:
+- แนบรูปได้หลายรูปตอนลงปัญหา / Found Defect
+- ใช้ได้ทั้งหน้า Inspection และปุ่ม Add Defect
+- บังคับอย่างน้อย 1 รูปต่อปัญหา
+- ถ่ายเพิ่มทีละรูปจากกล้องมือถือ หรือเลือกหลายรูปจากคลังภาพได้
+- มี Preview ก่อนบันทึก พร้อมลบรูปที่ไม่ต้องการ
+- รูปแรกใช้เป็น Cover / ภาพหลัก
+- Defect Backlog แสดง Gallery รูปปัญหาหลายรูปและกดดูรูปใหญ่ได้
+- Report และ CSV รองรับหลายรูปก่อนแก้
+- ตอน Complete ยังใช้ After Photo 1 รูปตาม Flow เดิม
+- Supabase defects เพิ่ม before_photo_urls (JSON array)
+- ข้อมูลเก่าที่มี before_photo_url รูปเดียวถูก backfill เข้ารูปแบบหลายรูป
+
+Supabase live project "IJ Maintenance" ได้ apply migration V6.2 แล้ว

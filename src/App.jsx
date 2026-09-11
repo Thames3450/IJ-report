@@ -19,7 +19,8 @@ function normalizeLocalData(value) {
     inspections: Array.isArray(base.inspections) ? base.inspections : [],
     defects: (Array.isArray(base.defects) ? base.defects : []).map((d) => ({
       ...d,
-      beforePhoto: d.beforePhoto || d.photo || '',
+      beforePhotos: Array.isArray(d.beforePhotos) && d.beforePhotos.length ? d.beforePhotos : (d.beforePhoto || d.photo ? [d.beforePhoto || d.photo] : []),
+      beforePhoto: (Array.isArray(d.beforePhotos) && d.beforePhotos.length ? d.beforePhotos[0] : (d.beforePhoto || d.photo || '')),
       afterPhoto: d.afterPhoto || '',
       resolutionAction: d.resolutionAction || '',
       resolutionResult: d.resolutionResult || '',
@@ -190,12 +191,16 @@ export default function App() {
     setDefectModal(true)
   }
 
-  const saveDefect = async (form, file) => {
+  const saveDefect = async (form, files) => {
     setBusy(true)
     try {
-      if (!file) throw new Error('Before photo is required / ต้องมีรูปก่อนแก้')
+      const beforeFiles = Array.from(files || [])
+      if (!beforeFiles.length) throw new Error('Before photo is required / ต้องมีรูปก่อนแก้อย่างน้อย 1 รูป')
       const id = defectId('DF')
-      const beforePhoto = cloudMode ? await uploadDefectPhoto(file, id, 'before') : await resizePhoto(file)
+      const beforePhotos = []
+      for (const file of beforeFiles) {
+        beforePhotos.push(cloudMode ? await uploadDefectPhoto(file, id, 'before') : await resizePhoto(file))
+      }
       const defect = {
         id,
         machine: form.machine,
@@ -210,7 +215,8 @@ export default function App() {
         status: 'OPEN',
         created: new Date().toISOString(),
         completed: null,
-        beforePhoto,
+        beforePhotos,
+        beforePhoto: beforePhotos[0] || '',
         afterPhoto: '',
         resolutionAction: '',
         resolutionResult: '',
@@ -232,16 +238,19 @@ export default function App() {
     try {
       const when = new Date().toISOString()
       const inspectionItems = entries.map(([key, value]) => {
-        const { beforeFile, beforePreview, ...safe } = value
-        return { key, ...safe, has_before_photo: Boolean(beforeFile) }
+        const { beforeFiles, beforePreviews, ...safe } = value
+        return { key, ...safe, before_photo_count: Array.isArray(beforeFiles) ? beforeFiles.length : 0, has_before_photo: Boolean(beforeFiles?.length) }
       })
       const inspection = { id: defectId('INSP'), machine, inspector, when, items: inspectionItems }
 
       const newDefs = []
       for (const [key, v] of entries.filter(([, value]) => value.status === 'DEFECT')) {
-        if (!v.beforeFile) throw new Error(`Missing before photo / ไม่มีรูปก่อนแก้: ${key.split('|')[2]}`)
+        if (!v.beforeFiles?.length) throw new Error(`Missing before photo / ไม่มีรูปก่อนแก้: ${key.split('|')[2]}`)
         const id = defectId('DF')
-        const beforePhoto = cloudMode ? await uploadDefectPhoto(v.beforeFile, id, 'before') : await resizePhoto(v.beforeFile)
+        const beforePhotos = []
+        for (const file of v.beforeFiles) {
+          beforePhotos.push(cloudMode ? await uploadDefectPhoto(file, id, 'before') : await resizePhoto(file))
+        }
         const item = key.split('|')[2]
         newDefs.push({
           id,
@@ -257,7 +266,8 @@ export default function App() {
           status: 'OPEN',
           created: when,
           completed: null,
-          beforePhoto,
+          beforePhotos,
+          beforePhoto: beforePhotos[0] || '',
           afterPhoto: '',
           resolutionAction: '',
           resolutionResult: '',
@@ -353,7 +363,7 @@ export default function App() {
       <aside className="sidebar no-print">
         <div className="brand-block"><div className="brand-logo"><img className="app-brand-icon" src={`${import.meta.env.BASE_URL}app-icon-192.png`} alt="IJ Maintenance" /></div><div><b>IJ Maintenance</b><Th>Machine Condition & PM</Th></div></div>
         <nav className="side-nav">{NAV_ITEMS.map(([id,en,th,icon]) => <button key={id} className={page === id ? 'active' : ''} onClick={() => go(id)}><Icon name={icon} /><span>{en}<Th>{th}</Th></span></button>)}</nav>
-        <div className="sidebar-foot"><div className={`sync-chip ${syncTone}`}><span className="sync-dot" /><span>{syncText}</span></div><small>React V6 · Sarabun · Evidence Flow</small></div>
+        <div className="sidebar-foot"><div className={`sync-chip ${syncTone}`}><span className="sync-dot" /><span>{syncText}</span></div><small>React V6.2 · Sarabun · Multi-photo Defect</small></div>
       </aside>
 
       <div className="app-main">

@@ -1,13 +1,13 @@
-# IJ Machine Condition & PM — React V6
+# IJ Machine Condition & PM — React V6.2
 
 เว็บแอป React + Vite สำหรับตรวจสภาพเครื่องจักร IJ, จัดการ Defect, Opportunity Maintenance และออกรายงาน Before/After
 
-## จุดเปลี่ยนสำคัญใน V6
+## จุดเปลี่ยนสำคัญใน V6 / V6.2
 
 Flow หน้า Inspection ถูกทำให้ง่ายขึ้นเพื่อให้ช่างไม่สับสน:
 
 1. **Normal / ปกติ** — กดแล้วจบรายการนั้น ไม่ต้องพิมพ์และไม่ต้องแนบรูป
-2. **Found Defect / พบปัญหา** — ระบบเปิดรายละเอียดเฉพาะรายการนั้น และบังคับให้ระบุอาการ ตำแหน่ง และ **Before Photo / รูปก่อนแก้** อย่างน้อย 1 รูป
+2. **Found Defect / พบปัญหา** — ระบบเปิดรายละเอียดเฉพาะรายการนั้น และบังคับให้ระบุอาการ ตำแหน่ง และ **Problem Photos / รูปจุดปัญหา** อย่างน้อย 1 รูป โดยแนบได้หลายรูป
 3. เมื่อบันทึก Inspection รายการที่เลือก Found Defect จะถูกสร้างเข้า **Defect Backlog** อัตโนมัติ
 4. เมื่อซ่อมเสร็จ กด **Complete / ปิดงาน** แล้วต้องกรอก Corrective Action, Result และแนบ **After Photo / รูปหลังแก้** ก่อนปิดงาน
 5. หน้า Defect และ Report แสดง **Before → Action → After → Result** เพื่อใช้เป็นหลักฐานและนำเสนอหัวหน้า/Production
@@ -29,7 +29,8 @@ Flow หน้า Inspection ถูกทำให้ง่ายขึ้นเ
 
 V6 เพิ่มฟิลด์ในตาราง `defects`:
 
-- `before_photo_url`
+- `before_photo_url` (ภาพหลัก/legacy)
+- `before_photo_urls` (JSON array สำหรับหลายรูปตอนลงปัญหา)
 - `after_photo_url`
 - `resolution_action`
 - `resolution_result`
@@ -79,3 +80,9 @@ Checklist จะเปลี่ยนตามประเภท Asset และ
 - iPhone/iPad Home Screen: `public/apple-touch-icon.png`
 - PWA manifest: `public/manifest.webmanifest`
 - โลโก้ Sidebar / Mobile Header / Login เปลี่ยนเป็นไอคอนเดียวกัน
+
+## V6.2 — แนบหลายรูปตอนลงปัญหา
+
+เมื่อกด `Found Defect / พบปัญหา` สามารถแนบรูปหลายรูปได้ทันที เพื่อให้เห็นทั้งภาพรวมและจุดเสียใกล้ ๆ ชัดเจนขึ้น ระบบบังคับอย่างน้อย 1 รูป และสามารถลบรูปที่ไม่ต้องการก่อนบันทึกได้ รูปแรกจะเป็นภาพหลักของ Defect ส่วนรูปทั้งหมดจะเปิดดูได้จาก Gallery ใน Defect Backlog
+
+รูปหลายรูปนี้ใช้เฉพาะช่วง `ลงปัญหา` ตาม Workflow หน้างาน ส่วนตอน `Complete / ปิดงาน` ยังคงบังคับ After Photo 1 รูป + Corrective Action + Result เช่นเดิม

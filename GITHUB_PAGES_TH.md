@@ -1,4 +1,4 @@
-# วิธีขึ้น GitHub Pages — IJ Maintenance React V6
+# วิธีขึ้น GitHub Pages — IJ Maintenance React V6.2
 
 โปรเจกต์นี้เตรียม GitHub Actions สำหรับ Build + Deploy อัตโนมัติแล้ว
 
