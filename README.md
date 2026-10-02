@@ -51,3 +51,10 @@ npm run dev
 - Clicking a date shows the day agenda and can prefill the Create Plan date.
 - Sundays are visually marked as the preferred TPM planning day.
 - Mobile view supports swipeable month calendar and compact event dots.
+
+
+## v12.4 Admin login fix
+- Admin login uses the existing MPR Admin account via the `admin-login` Edge Function.
+- Username field defaults to `admin` when Admin mode is selected.
+- Fixed Streamline image icon positioning inside login inputs on mobile.
+- Login footer/version updated to v12.4.
