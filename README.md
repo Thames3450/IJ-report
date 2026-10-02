@@ -58,3 +58,9 @@ npm run dev
 - Username field defaults to `admin` when Admin mode is selected.
 - Fixed Streamline image icon positioning inside login inputs on mobile.
 - Login footer/version updated to v12.4.
+
+## v12.5 Login transport fix
+- Local development now calls Edge Functions through the Vite same-origin proxy first (`/api/functions/*`).
+- Falls back to the direct Supabase Functions endpoint.
+- Uses the legacy anon key for Edge Function gateway compatibility, while the app client continues using the publishable key.
+- Restart `npm run dev` after upgrading because `vite.config.js` changed.

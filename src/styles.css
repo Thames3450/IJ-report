@@ -319,3 +319,20 @@ input,textarea{border-color:#ceddea;border-radius:10px;background:#fff}.select-m
 @media(max-width:460px){.calendar-summary-grid{grid-template-columns:1fr 1fr;gap:7px}.calendar-summary-card{padding:10px}.calendar-summary-card strong{font-size:18px}.calendar-weekday-head,.calendar-month-grid{min-width:560px}.week-card-grid{grid-template-columns:1fr}.calendar-view-switch button{padding:0 8px}.selected-day-panel{padding:12px}.calendar-legend>span{font-size:8px}}
 
 .login-card-pro .input-icon{display:block}.login-card-pro .input-icon input{width:100%;box-sizing:border-box}.login-card-pro .segment .streamline-icon{width:16px!important;height:16px!important}.login-card-pro .btn .streamline-icon{width:18px!important;height:18px!important}@media(max-width:560px){.login-form-zone{padding:18px 14px}.login-card-pro{width:100%;padding:22px 18px;border-radius:22px}.login-card-pro h2{font-size:28px}.segment{margin:22px 0}.input-icon input{min-height:52px}.login-submit{min-height:54px}}
+
+/* v12.6 — direct numeric labels on KPI charts */
+.ent-data-label{
+  fill:#18324f;
+  font-size:10px;
+  font-weight:800;
+  paint-order:stroke;
+  stroke:rgba(255,255,255,.96);
+  stroke-width:4px;
+  stroke-linejoin:round;
+  pointer-events:none;
+}
+.ent-loss-label{fill:#2563a9}
+.ent-frequency-label{fill:#168562}
+@media(max-width:720px){
+  .ent-data-label{font-size:9px;stroke-width:3px}
+}
