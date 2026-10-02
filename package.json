@@ -1,7 +1,7 @@
 {
-  "name": "ij-machine-condition-pm-react",
+  "name": "ij-maintenance-unified-system",
   "private": true,
-  "version": "6.2.0",
+  "version": "12.3.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -10,11 +10,11 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.57.4",
-    "react": "^19.1.1",
-    "react-dom": "^19.1.1"
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
   },
   "devDependencies": {
-    "@vitejs/plugin-react": "^5.0.2",
-    "vite": "^7.1.5"
+    "@vitejs/plugin-react": "^4.3.4",
+    "vite": "^6.0.7"
   }
 }
